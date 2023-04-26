@@ -3,9 +3,9 @@
  * @Date: 2023-04-25 10:24:05
  * @Author: linguanyuan
  * @LastEditors: linguanyuan
- * @LastEditTime: 2023-04-25 14:34:43
+ * @LastEditTime: 2023-04-26 15:19:10
  */
-import mongodb from "../connect.js"
+import mongoose from "../connect.js"
 
 /**
  * 查询
@@ -14,7 +14,7 @@ import mongodb from "../connect.js"
  * @param cb
  */
 export const query = (collection, params, cb) => {
-    mongodb.conn(function (db) {
+    mongoose(function (db) {
         db.collection(collection)
             .find(params)
             .toArray(function (err, results) {
@@ -30,7 +30,7 @@ export const query = (collection, params, cb) => {
  * @param cb 返回值
  */
 export const insert = (collection, obj, cb) => {
-    mongodb.conn(function (db) {
+    mongoose.conn(function (db) {
         db.collection(collection).insertOne(obj, function (err, results) {
             cb(err, results);
         })
@@ -46,7 +46,7 @@ export const insert = (collection, obj, cb) => {
  * @param cb 返回值
  */
 export const update = (collection, whereObj, upObj, cb) => {
-    mongodb.conn(function (db) {
+    mongoose.conn(function (db) {
         db.collection(collection).updateOne(whereObj, upObj, function (err, results) {
             cb(err, results);
         })
@@ -60,7 +60,7 @@ export const update = (collection, whereObj, upObj, cb) => {
  * @param cb 返回值
  */
 export const deletes = (collection, whereObj, cb) => {
-    mongodb.conn(function (db) {
+    mongoose.conn(function (db) {
         db.collection(collection).deleteOne(whereObj, function (err, results) {
             cb(err, results);
         })

@@ -3,7 +3,7 @@
  * @Date: 2022-09-23 11:14:17
  * @Author: linguanyuan
  * @LastEditors: linguanyuan
- * @LastEditTime: 2023-04-25 18:15:33
+ * @LastEditTime: 2023-04-26 15:16:40
  */
 import express from "express";
 import session from "express-session";
@@ -40,6 +40,7 @@ app.use(express.static("./pubilc")); //public就是静态资源的根目录，�
 routerFiles.forEach(async (v) => {
   let fileName = v.slice(0, -3)
 
+  console.log(fileName)
   if (fileName !== 'index') {
     app.use("/api", routerModuel[fileName]);
   }

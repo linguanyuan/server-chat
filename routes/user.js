@@ -3,11 +3,11 @@
  * @Date: 2023-04-25 11:34:46
  * @Author: linguanyuan
  * @LastEditors: linguanyuan
- * @LastEditTime: 2023-04-25 18:10:09
+ * @LastEditTime: 2023-04-26 19:52:46
  */
 import express from "express"
 import { query } from "../utils/common.js"
-import User from "../model/users.js"
+import userModel from "../model/users.js"
 import expressJWT from "express-jwt";
 import jwt from "jsonwebtoken";
 
@@ -15,8 +15,8 @@ const router = express.Router(); //调用函数
 const SECRET_KEY = 'omg69978'
 
 router.post("/login", (req, res) => {
-    query("User", { name: req.body.email, password: req.body.password }, (err, result) => {
-        if (result) {
+    userModel.find({ name: req.body.email, password: req.body.password }).then((err, docs) => {
+        if (docs) {
             // 校验密码....(此处省略), 如果校验成功, 生成jwt
             // 参数1: 生成到token中的信息
             // 参数2: 密钥
@@ -27,20 +27,28 @@ router.post("/login", (req, res) => {
                 { expiresIn: '3h' }
             )
             console.log('🚀 → token', token)
+            res.setHeader('Set-Cookie', token); // ⑤
             res.send({
-                status: 200,
-                message: '登录成功!',
-                token,
+                data: {
+                    status: 200,
+                    message: '登录成功!',
+                    token: token,
+                }
             })
         } else {
-            return res.status(400).json("账号不存在!");
+            res.send({
+                data: {
+                    status: 400,
+                    message: '账号不存在!',
+                }
+            })
         }
     })
 })
 
 router.post("/register", (req, res) => {
-    query("User", { name: req.body.name, email: req.body.email }, (err, result) => {
-        if (result) {
+    userModel.find({ name: req.body.name, email: req.body.email }).then(doc => {
+        if (doc) {
             return res.status(400).json("名字/邮箱已被注册!");
         } else {
             const avatar = gravatar.url(req.body.email, {
@@ -75,7 +83,7 @@ router.post("/register", (req, res) => {
             });
             res.send("注册成功");
         }
-    });
+    })
 });
 
 //导出该路由

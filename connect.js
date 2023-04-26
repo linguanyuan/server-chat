@@ -25,4 +25,5 @@ mongoose.connection.on('disconnection', function () {
   console.log('断开连接');
 })
 
+ 
 export default mongoose
